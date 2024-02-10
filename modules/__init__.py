@@ -1,5 +1,3 @@
-from ursina import *
-
-from modules.level import *
-from modules.scenes import *
-from modules.visuals import *
+from modules.level import Level
+from modules.scenes import Scene, MainMenu
+from modules.visuals import Shaders, Textures, BackgroundImage
