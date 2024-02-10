@@ -1,14 +1,18 @@
 from ursina import *
-from modules.visuals import BackgroundImage
+from modules.visuals import BackgroundImage, Textures
 
 
 class Scene(Entity):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
+        """Instance de scène, une fois appelée, efface les éléments actuels."""
         super().__init__(*args, **kwargs)
+        self.enabled = False
 
 class MainMenu(Scene):
-    def __init__(self):
-        BackgroundImage(load_texture("./assets/images/menu_bg"))
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+    
+        BackgroundImage(load_texture(Textures.MENU_BACKGROUND))
 
         menu_buttons = {
             "Jouer": Func(None),
