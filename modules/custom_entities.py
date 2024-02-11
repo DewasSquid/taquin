@@ -19,6 +19,12 @@ class BackgroundImage(Entity):
             **kwargs
         )
 
+class Scene(Entity):
+    def __init__(self, *args, **kwargs) -> None:
+        """Instance de scène, une fois appelée, efface les éléments actuels."""
+        super().__init__(*args, **kwargs)
+        self.enabled = False
+
 class Level():
     def __init__(self, level_path: str, *args, **kwargs) -> None:
         """Enregistre un niveau à partir d"une structure hiérarchisée précise
