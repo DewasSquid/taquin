@@ -24,7 +24,6 @@ class MainMenu(Scene):
 
         menu_buttons = {
             "Jouer": Func(None),
-            "Paramètres": Func(None),
             "Sortir": Func(quit)
         }
 
