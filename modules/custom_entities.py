@@ -1,13 +1,14 @@
 from ursina import *
+from pathlib import Path
 
 
 class BackgroundImage(Entity):
     def __init__(self, texture : Texture, *args, **kwargs) -> None:
-        """Entitée personnalisée permettant d'afficher une image de fond.
-        Cette dernière s'étendra sur tout l'écran
+        """Entitée personnalisée permettant d"afficher une image de fond.
+        Cette dernière s"étendra sur tout l"écran
 
         Args:
-            texture (Texture): La texture a utiliser pour l'image
+            texture (Texture): La texture a utiliser pour l"image
         """
         super().__init__(
             model="quad",
@@ -18,48 +19,32 @@ class BackgroundImage(Entity):
             **kwargs
         )
 
-class Scene(Entity):
-    def __init__(self, *args, **kwargs) -> None:
-        """Instance de scène, une fois appelée, efface les éléments actuels."""
-        super().__init__(*args, **kwargs)
-        self.enabled = False
-
-class Level(Scene):
+class Level():
     def __init__(self, level_path: str, *args, **kwargs) -> None:
-        """Enregistre un niveau à partir d'une structure hiérarchisée précise
+        """Enregistre un niveau à partir d"une structure hiérarchisée précise
 
         Args:
-            level_path (str): chemin d'accès à la structure hiérarchisée
-        
-        Examples:
-        ```py
-        GenerateLevel(level_path="./levels/level_perso")
-        ```
-        
-        ```
-        ./levels/level_perso
-        |---> thumbnail.png
-        |---> about.txt
-        |---> ./assets/
-              |---> fond.fichier_visuel
-              |---> ./audio/
-                    |---> fichiers_audio.wav
-              |---> ./models/
-                    |---> models_pour_les_cubes.obj
+            level_path (str): chemin d"accès à la structure hiérarchisée
         """
         super().__init__(*args, **kwargs)
         self.__level_path = Path(level_path)
         self.data = self.__create_hierarchy(self.__level_path)
 
-    def __create_hierarchy(self, path: str) -> dict:
-        """Génère la liste des assets du niveau
+    def __create_hierarchy(self, path: Path) -> dict:
+        """Crée une structure hiérarchisée à partir d"un chemin donné
 
         Args:
-            path (str): Le chemin d'accès au dossier du niveau 
+            path (Path): Chemin d"accès à la structure hiérarchisée
 
         Returns:
-            dict: La liste des fichiers et sous-dossiers du niveau, automatiquement accédée par le jeu
+            dict: Structure hiérarchisée représentée en dictionnaire
         """
-        data = {}
-        for item in os.walk(path):
-            pass
+        hierarchy = {"name": path.name, "type": "folder", "children": []}
+
+        for item in path.iterdir():
+            if item.is_file():
+                hierarchy["children"].append({"name": item.name, "type": "file"})
+            elif item.is_dir():
+                hierarchy["children"].append({"name": item.name, "type": "folder", "children": self.__create_hierarchy(item)})
+
+        return hierarchy
