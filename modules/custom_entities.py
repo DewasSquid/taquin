@@ -5,7 +5,7 @@ from pathlib import Path
 class BackgroundImage(Entity):
     def __init__(self, texture : Texture, *args, **kwargs) -> None:
         """Entitée personnalisée permettant d"afficher une image de fond.
-        Cette dernière s"étendra sur tout l"écran
+        Cette dernière s"étendra sur tout l'écran
 
         Args:
             texture (Texture): La texture a utiliser pour l"image
@@ -13,44 +13,22 @@ class BackgroundImage(Entity):
         super().__init__(
             model="quad",
             texture=texture,
-            scale=(window.size/100),
+            scale=(window.aspect_ratio, 1),
+            color=color.white,
+            world_y=-.15,
             z=1,
             *args,
             **kwargs
         )
 
-class Scene(Entity):
-    def __init__(self, *args, **kwargs) -> None:
-        """Instance de scène, une fois appelée, efface les éléments actuels."""
-        super().__init__(*args, **kwargs)
-        self.enabled = False
-
-class Level():
-    def __init__(self, level_path: str, *args, **kwargs) -> None:
-        """Enregistre un niveau à partir d"une structure hiérarchisée précise
+class MenuButton(Button):
+    def __init__(self, text: str, *arg, **kwargs) -> None:
+        """Boutton personalisé avec style préfait
 
         Args:
-            level_path (str): chemin d"accès à la structure hiérarchisée
+            text (str): le texte à afficher
         """
-        super().__init__(*args, **kwargs)
-        self.__level_path = Path(level_path)
-        self.data = self.__create_hierarchy(self.__level_path)
+        super().__init__(text, scale=(.25, .075), highlight_color=color.azure, **kwargs)
 
-    def __create_hierarchy(self, path: Path) -> dict:
-        """Crée une structure hiérarchisée à partir d"un chemin donné
-
-        Args:
-            path (Path): Chemin d"accès à la structure hiérarchisée
-
-        Returns:
-            dict: Structure hiérarchisée représentée en dictionnaire
-        """
-        hierarchy = {"name": path.name, "type": "folder", "children": []}
-
-        for item in path.iterdir():
-            if item.is_file():
-                hierarchy["children"].append({"name": item.name, "type": "file"})
-            elif item.is_dir():
-                hierarchy["children"].append({"name": item.name, "type": "folder", "children": self.__create_hierarchy(item)})
-
-        return hierarchy
+        for key, value in kwargs.items():
+            setattr(self, key ,value)

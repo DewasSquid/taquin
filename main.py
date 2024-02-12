@@ -3,9 +3,8 @@ from ursina import *
 from modules import *
 
 
-game = Ursina()
+app = Ursina()
 
-main_menu = MainMenu()
-main_menu.enabled = True
+import scenes.main_menu
 
-game.run()
+app.run()
