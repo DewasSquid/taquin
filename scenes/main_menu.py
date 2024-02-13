@@ -43,7 +43,7 @@ def start_game():
 for i, level in enumerate(os.listdir("./assets/levels/")):
     MenuButton(parent=load_menu, text=level, y=-i * button_spacing, on_click=start_game)
 
-load_menu.back_button = MenuButton(parent=load_menu, text="back", y=((-i-2) * button_spacing), on_click=Func(setattr, state_handler, "state", "main_menu"))
+load_menu.back_button = MenuButton(parent=load_menu, text="retour", y=((-i-2) * button_spacing), on_click=Func(setattr, state_handler, "state", "main_menu"))
 
 # Petite animation stylé quand on change de menu
 for menu in (main_menu, load_menu, options_menu):
