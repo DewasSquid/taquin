@@ -10,7 +10,6 @@ void main() {
     vec4 col = vec4(0.);
 
     for(float index=0; index<10; index++) {
-        // add color at position to color
         vec2 offset_uv = uv + vec2(0, (index/9 - 0.5) * blur_size);
         col += texture(tex, offset_uv);
     }
