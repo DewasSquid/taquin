@@ -25,7 +25,6 @@ class BackgroundImage(Entity):
             texture=texture,
             scale=(window.aspect_ratio, 1),
             color=color.white,
-            world_y=-.15,
             z=3,
             *args,
             **kwargs
@@ -33,13 +32,12 @@ class BackgroundImage(Entity):
         
         # Une deuxième entitée au premier plan pour gérer l'opacité
         self._opacity = Entity(
-            parent=self.parent,
             model="quad",
             scale=self.scale,
             color=color.rgba(0, 0, 0, opacity),
-            world_y=self.world_y,
-            position=self.position,
-            z=2
+            z=2,
+            *args,
+            **kwargs
         )
         
     @property
@@ -132,7 +130,7 @@ class Level(Entity):
         
     def setup_camera(self) -> None:
         """Définie la position de la caméra en fonction du nombre de briques"""
-        camera.position = Vec3(1, 1, (-1 * (self.model_amount**2)))
+        camera.position = Vec3(2, 1.5, (-1 * (self.model_amount**2)))
     
     @property
     def bricks(self) -> list[Brick]:

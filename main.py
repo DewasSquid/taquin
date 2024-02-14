@@ -83,6 +83,6 @@ for menu in (main_menu, load_menu):
                 entity.animate("alpha", .7, delay=i*.05, duration=.1, curve=curve.out_quad)
     menu.on_enable = animate_in_menu
 
-BackgroundImage(parent=menu_parent, texture=Textures.MENU_BACKGROUND)
+BackgroundImage(parent=menu_parent, texture=Textures.MENU_BACKGROUND, y=-.15)
 
 app.run()
