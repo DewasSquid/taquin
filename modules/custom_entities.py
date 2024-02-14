@@ -3,7 +3,7 @@ from ursina import *
 
 class BackgroundImage(Entity):
     def __init__(self, texture : Texture, opacity: int = 128, *args, **kwargs) -> None:
-        """Entitée personnalisée permettant d"afficher une image de fond.
+        """Entitée personnalisée permettant d'afficher une image de fond.
         Cette dernière s'étendra sur tout l'écran
 
         Args:
@@ -62,6 +62,25 @@ class MenuButton(Button):
             **kwargs
         )
 
+class Brick(Button):
+    def __init__(self, model: Mesh, id: int, *args, **kwargs) -> None:
+        """Entitée représentant une brique de tableau
+
+        Args:
+            model (Mesh): Le modèle de la brique
+            id (int): Son identifiant la représentant dans un tableau
+        """
+        super().__init__(
+            model=model,
+            scale=0,
+            *args,
+            **kwargs
+        )
+        self.id = id
+    
+    def on_enable(self) -> None:
+        self.animate_scale(value=1, duration=.1*self.id, curve=curve.out_circ)
+
 class Level(Entity):
     MIN_BRICKS = 3
 
@@ -75,7 +94,7 @@ class Level(Entity):
         
         self.model_amount = len(models)
         if self.model_amount < self.MIN_BRICKS:
-            raise Exception(f"Not enough brick models, the level needs to be at least {self.MIN_BRICKS}x{self.MIN_BRICKS}")
+            raise Exception(f"The level has {self.model_amount} models but needs to be at least {self.MIN_BRICKS}x{self.MIN_BRICKS}")
         
         self.models = models
         
@@ -87,22 +106,20 @@ class Level(Entity):
         Returns:
             list: Une liste contenant chaque cube du tableau
         """
-        #TODO: dictionary for each models instead of list
         i = 0
         row = []
         for x in range(self.model_amount):
             column = []
             for y, model in enumerate(self.models):
                 i += 1
-                brick = Button(
+                brick = Brick(
                     parent=scene,
                     model=model,
+                    id=i,
                     tooltip=Tooltip(str(i)),
                     color=color.random_color(),
-                    position=Vec3(x, y, 1),
-                    scale=0
+                    position=Vec3(x, y, 1)
                 )
-                brick.animate_scale(value=1, duration=.1*i, curve=curve.out_circ)
 
                 column.append(brick)
             row.append(column)
