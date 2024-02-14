@@ -7,14 +7,6 @@ config = {
     "difficulty": 1
 }
 
-frame = GameFrame()
-
-def disable_mouse():
-    mouse.enabled = False
-
-def enable_mouse():
-    mouse.enabled = True
-
 def main():
     models = ["cube" for _ in range(3)]
     level = Level(models=models)
@@ -22,10 +14,10 @@ def main():
     BackgroundImage(texture=Textures.MENU_BACKGROUND)
 
     board_seq = Sequence(
-        Func(disable_mouse),
+        Func(setattr, mouse, "enabled", False),
         Func(level.generate_board),
         Wait(2),
         Func(level.shuffle_board),
-        Func(enable_mouse)
-    )
+        Func(setattr, mouse, "enabled", True),
+    )  # TODO: Convertir en fonction
     board_seq.start()
