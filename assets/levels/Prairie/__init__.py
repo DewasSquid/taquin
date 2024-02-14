@@ -17,9 +17,9 @@ def enable_mouse():
 
 def main():
     models = ["cube" for _ in range(3)]
-    level = Level(parent=frame, models=models)
+    level = Level(models=models)
     
-    BackgroundImage(parent=frame, texture=Textures.MENU_BACKGROUND)
+    BackgroundImage(texture=Textures.MENU_BACKGROUND)
 
     board_seq = Sequence(
         Func(disable_mouse),
