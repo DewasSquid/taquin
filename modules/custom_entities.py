@@ -87,14 +87,17 @@ class Level(Entity):
         Returns:
             list: Une liste contenant chaque cube du tableau
         """
+        #TODO: dictionary for each models instead of list
         i = 0
         row = []
         for x in range(self.model_amount):
             column = []
             for y, model in enumerate(self.models):
                 i += 1
-                brick = Entity(
+                brick = Button(
+                    parent=scene,
                     model=model,
+                    tooltip=Tooltip(str(i)),
                     color=color.random_color(),
                     position=Vec3(x, y, 1),
                     scale=0
