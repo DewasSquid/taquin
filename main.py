@@ -58,7 +58,6 @@ for i, level_dir in enumerate(os.listdir(LEVEL_PATH)):
         text=level_dir,
         tooltip=Tooltip(
             text=f"<scale:1.5><yellow>{level_module.config['difficulty']} étoile(s)\n<scale:1><default>{level_module.config['description']}",
-            images=[],
             background_color=color.black,
             wordwrap=25
         ),
