@@ -3,7 +3,7 @@ from ursina import *
 
 
 config = {
-    "name": "Prairie",
+    "description": "Dans la prairie, les vents murmurent des secrets à l'herbe",
     "difficulty": 1
 }
 
