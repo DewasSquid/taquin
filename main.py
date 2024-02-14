@@ -9,7 +9,7 @@ from modules import *
 app = Ursina()
 
 button_spacing = .075 * 1.25
-menu_parent = Entity(parent=camera.ui, y=.15)
+menu_parent = GameFrame()
 main_menu = Entity(parent=menu_parent)
 load_menu = Entity(parent=menu_parent)
 
@@ -40,7 +40,7 @@ for i, e in enumerate(main_menu.buttons):
 # Selecteur de niveau
 def start_game(level):
     menu_parent.enabled = False
-    level.draw_board()
+    level.main()
 
 LEVEL_PATH = "assets/levels"
 for i, level_dir in enumerate(os.listdir(LEVEL_PATH)):
@@ -83,6 +83,6 @@ for menu in (main_menu, load_menu):
                 entity.animate("alpha", .7, delay=i*.05, duration=.1, curve=curve.out_quad)
     menu.on_enable = animate_in_menu
 
-BackgroundImage(parent=menu_parent, texture="assets/images/menu_bg.jpg")
+BackgroundImage(parent=menu_parent, texture=Textures.MENU_BACKGROUND)
 
 app.run()

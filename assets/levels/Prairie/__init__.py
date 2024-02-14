@@ -7,8 +7,25 @@ config = {
     "difficulty": 1
 }
 
-def draw_board():
-    models = ["cube" for _ in range(3)]
-    level = Level(models=models)
+frame = GameFrame()
 
-    board = level.generate_board()
+def disable_mouse():
+    mouse.enabled = False
+
+def enable_mouse():
+    mouse.enabled = True
+
+def main():
+    models = ["cube" for _ in range(3)]
+    level = Level(parent=frame, models=models)
+    
+    BackgroundImage(parent=frame, texture=Textures.MENU_BACKGROUND)
+
+    board_seq = Sequence(
+        Func(disable_mouse),
+        Func(level.generate_board),
+        Wait(2),
+        Func(level.shuffle_board),
+        Func(enable_mouse)
+    )
+    board_seq.start()

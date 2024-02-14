@@ -1,5 +1,15 @@
 from ursina import *
+import random
 
+class GameFrame(Entity):
+    def __init__(self, *args, **kwargs):
+        """Entitée "root", il est recommendé de l'utiliser en tant que parent"""
+        super().__init__(
+            parent=camera.ui,
+            y=.15,
+            *args,
+            **kwargs
+        )
 
 class BackgroundImage(Entity):
     def __init__(self, texture : Texture, opacity: int = 128, *args, **kwargs) -> None:
@@ -16,7 +26,7 @@ class BackgroundImage(Entity):
             scale=(window.aspect_ratio, 1),
             color=color.white,
             world_y=-.15,
-            z=2,
+            z=3,
             *args,
             **kwargs
         )
@@ -28,7 +38,8 @@ class BackgroundImage(Entity):
             scale=self.scale,
             color=color.rgba(0, 0, 0, opacity),
             world_y=self.world_y,
-            z=1
+            position=self.position,
+            z=2
         )
         
     @property
@@ -37,7 +48,7 @@ class BackgroundImage(Entity):
         return self._opacity.color.a
     
     @opacity.setter
-    def opacity(self, value: int):
+    def opacity(self, value: int) -> None:
         """Permet de changer l'opacité de l'image
 
         Args:
@@ -63,12 +74,13 @@ class MenuButton(Button):
         )
 
 class Brick(Button):
-    def __init__(self, model: Mesh, id: int, *args, **kwargs) -> None:
+    def __init__(self, model: Mesh, id: int, level, *args, **kwargs) -> None:
         """Entitée représentant une brique de tableau
 
         Args:
             model (Mesh): Le modèle de la brique
             id (int): Son identifiant la représentant dans un tableau
+            level (level): Le niveau parent
         """
         super().__init__(
             model=model,
@@ -76,14 +88,31 @@ class Brick(Button):
             *args,
             **kwargs
         )
+        
         self.id = id
+        self.level = level
+        if self.id == 0:
+            self.color = color.rgba(0, 0, 0, 0)
+            self.highlight_color = self.color
+            self.pressed_color = self.color
+
+    def on_click(self) -> None:
+        """Échange la position de cette brique avec la brique noire lorsqu'elle est cliquée"""
+        if self == self.level.black_brick: return
+
+        x1, y1, _ = self.position
+        x2, y2, _ = self.level.black_brick.position
+
+        if abs(x1 - x2) + abs(y1 - y2) == 1:
+            self.level.swap_bricks(self, self.level.black_brick)
     
     def on_enable(self) -> None:
+        """L'ors de l'affichage de la brique"""
         self.animate_scale(value=1, duration=.1*self.id, curve=curve.out_circ)
 
 class Level(Entity):
     MIN_BRICKS = 3
-
+    
     def __init__(self, models: list[Mesh], *args, **kwargs) -> None:
         """Structure pour un niveau de base
         
@@ -97,30 +126,67 @@ class Level(Entity):
             raise Exception(f"The level has {self.model_amount} models but needs to be at least {self.MIN_BRICKS}x{self.MIN_BRICKS}")
         
         self.models = models
+        self.black_brick = None
         
+        self.setup_camera()
+        
+    def setup_camera(self) -> None:
+        """Définie la position de la caméra en fonction du nombre de briques"""
         camera.position = Vec3(1, 1, (-1 * (self.model_amount**2)))
+    
+    @property
+    def bricks(self) -> list[Brick]:
+        """Renvoie une liste de toutes les briques présentes dans le niveau"""
+        bricks = []
+        for row in self.board:
+            for brick in row:
+                bricks.append(brick)
+        return bricks
 
-    def generate_board(self) -> list[list]:
-        """Génère un tableau de taquin en fonction du nombre de modèles
-
-        Returns:
-            list: Une liste contenant chaque cube du tableau
-        """
+    def generate_board(self) -> None:
+        """Génère un tableau de taquin en fonction du nombre de modèles"""
         i = 0
         row = []
         for x in range(self.model_amount):
             column = []
             for y, model in enumerate(self.models):
-                i += 1
                 brick = Brick(
-                    parent=scene,
+                    parent=self.parent,
                     model=model,
-                    id=i,
-                    tooltip=Tooltip(str(i)),
                     color=color.random_color(),
+                    id=i,
+                    level=self,
                     position=Vec3(x, y, 1)
                 )
-
+                if brick.id == 0:
+                    self.black_brick = brick
                 column.append(brick)
+                i += 1
             row.append(column)
-        return row
+        self.board = row
+
+    def shuffle_board(self) -> None:
+        """Mélange les briques du tableau"""
+        bricks = self.bricks
+        random.shuffle(bricks)
+        
+        # Réaffecte les briques mélangées au tableau
+        for x, row in enumerate(self.board):
+            for y, _ in enumerate(row):
+                self.board[x][y] = bricks[x * len(row) + y]
+                self.board[x][y].animate_position(value=Vec3(x, y, 1), duration=.2, curve=curve.linear)
+    
+    def swap_bricks(self, brick1: Brick, brick2: Brick) -> None:
+        """Échange les positions de deux briques"""
+        brick1_position, brick2_position = brick1.position, brick2.position
+        brick1.animate_position(value=brick2_position, duration=.05, curve=curve.linear)
+        brick2.animate_position(value=brick1_position, duration=.05, curve=curve.linear)
+    
+    def is_solved(self) -> bool:
+        """Vérifie si le tableau est résolu"""
+        i = 0
+        for brick in self.bricks:
+            if brick.id != i:
+                return False
+            i += 1
+        return True
