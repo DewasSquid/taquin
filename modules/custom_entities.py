@@ -130,7 +130,8 @@ class Level(Entity):
         
     def setup_camera(self) -> None:
         """Définie la position de la caméra en fonction du nombre de briques"""
-        camera.position = Vec3(1, 1, (-1 * (self.model_amount**2)))
+        squared_pos = 0.35 * self.model_amount
+        camera.position = Vec3(squared_pos, squared_pos, (-1 * (self.model_amount**2)))
     
     @property
     def bricks(self) -> list[Brick]:
