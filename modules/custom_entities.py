@@ -101,13 +101,15 @@ class Brick(Button):
 
         if abs(x1 - x2) + abs(y1 - y2) == 1:
             self.level.swap_bricks(self, self.level.black_brick)
+        
+        if self.level.is_solved(): print("GG")
     
     def on_enable(self) -> None:
         """L'ors de l'affichage de la brique"""
         self.animate_scale(value=1, duration=.1*self.id, curve=curve.out_circ)
 
 class Level(Entity):
-    MIN_BRICKS = 6
+    MIN_BRICKS = 3
     # FIXME: The current implementation requires the model count to be at least 3 bricks.
     # This constraint needs to be reviewed as the bricks are actually duplicated in the generate_board method because of the X and Y loops.
     # To counter this, the number of submitted models needs to be at least 6,
@@ -129,7 +131,7 @@ class Level(Entity):
         
         self.model_amount = len(models)
         if self.model_amount < self.MIN_BRICKS:
-            raise Exception(f"The level has {self.model_amount} models but needs to be at least {self.MIN_BRICKS}x{self.MIN_BRICKS}")
+            raise Exception(f"The level has {self.model_amount} models but needs to be at least {self.MIN_BRICKS}")
         
         self.models = models
         self.black_brick = None
