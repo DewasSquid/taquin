@@ -8,8 +8,6 @@ from modules import *
 
 app = Ursina()
 
-music = Audio("assets/audio/main_menu.mp3", volume=.5, loop=True, pitch=1.5)
-
 button_spacing = .075 * 1.25
 menu_parent = GameFrame()
 main_menu = Entity(parent=menu_parent)
@@ -85,6 +83,6 @@ for menu in (main_menu, load_menu):
                 entity.animate("alpha", .7, delay=i*.05, duration=.1, curve=curve.out_quad)
     menu.on_enable = animate_in_menu
 
-BackgroundImage(parent=menu_parent, texture=Textures.MENU_BACKGROUND, y=-.15)
+BackgroundImage(parent=menu_parent, texture=Textures.MENU_BACKGROUND, scale=(window.aspect_ratio, 1), y=-.15)
 
 app.run()
