@@ -8,10 +8,14 @@ config = {
 }
 
 def main():
-    models = ["cube" for _ in range(3)]
+    models = ["cube" for _ in range(10)]
     level = Level(models=models)
     
-    BackgroundImage(texture=Textures.MENU_BACKGROUND)
+    BackgroundImage(
+        texture=Textures.MENU_BACKGROUND,
+        scale=Vec2(level.model_amount**2, level.model_amount**window.aspect_ratio),
+        position=Vec2(camera.position.x, camera.position.y)
+    )
 
     board_seq = Sequence(
         Func(setattr, mouse, "enabled", False),

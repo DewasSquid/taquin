@@ -23,7 +23,6 @@ class BackgroundImage(Entity):
         super().__init__(
             model="quad",
             texture=texture,
-            scale=(window.aspect_ratio, 1),
             color=color.white,
             z=3,
             *args,
@@ -33,7 +32,6 @@ class BackgroundImage(Entity):
         # Une deuxième entitée au premier plan pour gérer l'opacité
         self._opacity = Entity(
             model="quad",
-            scale=self.scale,
             color=color.rgba(0, 0, 0, opacity),
             z=2,
             *args,
@@ -110,6 +108,11 @@ class Brick(Button):
 
 class Level(Entity):
     MIN_BRICKS = 3
+    # FIXME: Model needs to be at least 6, and generation methods needs to be reviewed
+    # since it will actually duplicate each bricks and not place the models
+    # also, the brick class can probably be removed and everything could be placed inside the level class.
+    # Therefore, a dictionary could be created in order to 
+    # the entity created in the create_board method will be buttons and args + kwargs could be passed
     
     def __init__(self, models: list[Mesh], *args, **kwargs) -> None:
         """Structure pour un niveau de base
@@ -130,8 +133,8 @@ class Level(Entity):
         
     def setup_camera(self) -> None:
         """Définie la position de la caméra en fonction du nombre de briques"""
-        squared_pos = 0.35 * self.model_amount
-        camera.position = Vec3(squared_pos, squared_pos, (-1 * (self.model_amount**2)))
+        squared_pos = .35 * self.model_amount
+        camera.position = Vec3(squared_pos-.1, squared_pos, (-1 * (self.model_amount**2)))
     
     @property
     def bricks(self) -> list[Brick]:
@@ -152,7 +155,6 @@ class Level(Entity):
                 brick = Brick(
                     parent=self.parent,
                     model=model,
-                    color=color.random_color(),
                     id=i,
                     level=self,
                     position=Vec3(x, y, 1)
