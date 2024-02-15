@@ -107,12 +107,17 @@ class Brick(Button):
         self.animate_scale(value=1, duration=.1*self.id, curve=curve.out_circ)
 
 class Level(Entity):
-    MIN_BRICKS = 3
-    # FIXME: Model needs to be at least 6, and generation methods needs to be reviewed
-    # since it will actually duplicate each bricks and not place the models
-    # also, the brick class can probably be removed and everything could be placed inside the level class.
-    # Therefore, a dictionary could be created in order to 
-    # the entity created in the create_board method will be buttons and args + kwargs could be passed
+    MIN_BRICKS = 6
+    # FIXME: The current implementation requires the model count to be at least 3 bricks.
+    # This constraint needs to be reviewed as the bricks are actually duplicated in the generate_board method because of the X and Y loops.
+    # To counter this, the number of submitted models needs to be at least 6,
+    # and the generate_board method needs to be edited in order to generate the board by creating bricks using each model in submited order
+    # This would only allow for a total amount of submited models to be a multiple of 3
+    
+    # Additionally, the Brick class could potentially be refactored out, with its functionality integrated into the Level class.
+    # This would simplify the architecture and improve code readability.
+    # A possible approach could be the use of a dictionary to map the buttons (value) created in the create_board method to their corresponding iteration ID (key)
+    # Moreover, args and kwargs to be passed through the generate_board function in order to customize their style with each instance of a level
     
     def __init__(self, models: list[Mesh], *args, **kwargs) -> None:
         """Structure pour un niveau de base
