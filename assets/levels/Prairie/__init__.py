@@ -8,7 +8,7 @@ config = {
 }
 
 def main():
-    models = ["cube" for _ in range(10)]
+    models = ["cube" for _ in range(3)]
     level = Level(models=models)
     
     BackgroundImage(
