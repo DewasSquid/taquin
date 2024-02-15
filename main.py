@@ -8,6 +8,8 @@ from modules import *
 
 app = Ursina()
 
+music = Audio("assets/audio/main_menu.mp3", volume=.5, loop=True, pitch=1.5)
+
 button_spacing = .075 * 1.25
 menu_parent = GameFrame()
 main_menu = Entity(parent=menu_parent)
