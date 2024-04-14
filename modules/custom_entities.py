@@ -151,6 +151,17 @@ class Level(Entity):
             for brick in row:
                 bricks.append(brick)
         return bricks
+    
+    def create(self) -> None:
+        """Séquence pour créé un niveau complet, avec tableau et séquence d'attente"""
+        board_seq = Sequence(
+            Func(setattr, mouse, "enabled", False),
+            Func(self.generate_board),
+            Wait(2),
+            Func(self.shuffle_board),
+            Func(setattr, mouse, "enabled", True),
+        )
+        board_seq.start()
 
     def generate_board(self) -> None:
         """Génère un tableau de taquin en fonction du nombre de modèles"""
