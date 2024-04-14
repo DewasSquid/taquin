@@ -24,7 +24,7 @@ main_menu.title = Text(
     parent=main_menu,
     text="Jeu Du Taquin",
     scale=5,
-    color=color.rgba(255, 100, 200),
+    color=color.rgb(255, 100, 200),
     position=Vec2(-.4, .1)
 )
 
