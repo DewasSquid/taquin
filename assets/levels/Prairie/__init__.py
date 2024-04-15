@@ -8,7 +8,7 @@ config = {
 }
 
 def main():
-    models = ["cube" for _ in range(3)]
+    models = ["cube" for _ in range(9)]
     level = Level(models=models)
     level.create()
     

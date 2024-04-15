@@ -109,17 +109,7 @@ class Brick(Button):
         self.animate_scale(value=1, duration=.1*self.id, curve=curve.out_circ)
 
 class Level(Entity):
-    MIN_BRICKS = 3
-    # FIXME: The current implementation requires the model count to be at least 3 bricks.
-    # This constraint needs to be reviewed as the bricks are actually duplicated in the generate_board method because of the X and Y loops.
-    # To counter this, the number of submitted models needs to be at least 6,
-    # and the generate_board method needs to be edited in order to generate the board by creating bricks using each model in submited order
-    # This would only allow for a total amount of submited models to be a multiple of 3
-    
-    # Additionally, the Brick class could potentially be refactored out, with its functionality integrated into the Level class.
-    # This would simplify the architecture and improve code readability.
-    # A possible approach could be the use of a dictionary to map the buttons (value) created in the create_board method to their corresponding iteration ID (key)
-    # Moreover, args and kwargs to be passed through the generate_board function in order to customize their style with each instance of a level
+    MIN_BRICKS = 9
     
     def __init__(self, models: list[Mesh], *args, **kwargs) -> None:
         """Structure pour un niveau de base
@@ -140,8 +130,8 @@ class Level(Entity):
         
     def setup_camera(self) -> None:
         """Définie la position de la caméra en fonction du nombre de briques"""
-        squared_pos = .35 * self.model_amount
-        camera.position = Vec3(squared_pos-.1, squared_pos, (-1 * (self.model_amount**2)))
+        squared_pos = .15 * self.model_amount
+        camera.position = Vec3(squared_pos-.1, squared_pos, -(self.model_amount**1.5))
     
     @property
     def bricks(self) -> list[Brick]:
@@ -165,20 +155,26 @@ class Level(Entity):
 
     def generate_board(self) -> None:
         """Génère un tableau de taquin en fonction du nombre de modèles"""
-        i = 0
+        # Permet d'obtenir le nombre de briques par colonnes
+        dimension = math.ceil(math.sqrt(self.model_amount))
+        
         row = []
-        for x in range(self.model_amount):
-            column = []
-            for y, model in enumerate(self.models):
+        column = []
+        i = 0
+        for x in range(dimension):
+            for y in range(dimension):
+                model = self.models[i]
+                
                 brick = Brick(
                     parent=self.parent,
                     model=model,
                     id=i,
                     level=self,
-                    position=Vec3(x, y, 1)
+                    position=Vec3(x, y, 1),
+                    color=color.random_color()
                 )
-                if brick.id == 0:
-                    self.black_brick = brick
+                if brick.id == 0: self.black_brick = brick
+                
                 column.append(brick)
                 i += 1
             row.append(column)
@@ -186,15 +182,17 @@ class Level(Entity):
 
     def shuffle_board(self) -> None:
         """Mélange les briques du tableau"""
-        bricks = self.bricks
-        random.shuffle(bricks)
-        
-        # Réaffecte les briques mélangées au tableau
-        for x, row in enumerate(self.board):
-            for y, _ in enumerate(row):
-                self.board[x][y] = bricks[x * len(row) + y]
-                self.board[x][y].animate_position(value=Vec3(x, y, 1), duration=.2, curve=curve.linear)
-    
+        # Collecte les positions originales des briques dans la grille
+        original_positions = {(brick.position.x, brick.position.y): brick for brick in self.bricks}
+
+        # Génère un nouvel ordre aléatoire pour les positions des briques dans la grille
+        random_positions = list(original_positions.keys())
+        random.shuffle(random_positions)
+
+        # Réaffecte les briques aux positions aléatoires dans la grille
+        for (x1, y1), (x2, y2) in zip(original_positions.keys(), random_positions):
+            original_positions[(x1, y1)].animate_position(Vec3(x2, y2, 1), duration=.15)
+
     def swap_bricks(self, brick1: Brick, brick2: Brick) -> None:
         """Échange les positions de deux briques"""
         brick1_position, brick2_position = brick1.position, brick2.position
