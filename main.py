@@ -38,7 +38,7 @@ for i, e in enumerate(main_menu.buttons):
 
 # Selecteur de niveau
 def start_game(level):
-    menu_parent.enabled = False
+    menu_parent.enabled = False 
     level.main()
 
 
