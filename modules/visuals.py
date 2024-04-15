@@ -11,7 +11,3 @@ class Shaders:
                 "blur_size": blur_size
             }
         )
-
-class Textures:
-    """Une énumération de chemin d'accès vers des textures"""
-    MENU_BACKGROUND = "assets/images/menu_bg.jpg"
