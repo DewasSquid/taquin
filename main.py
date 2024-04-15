@@ -46,7 +46,7 @@ LEVEL_PATH = "assets/levels"
 for i, level_dir in enumerate(os.listdir(LEVEL_PATH)):
     level_path = os.path.join(LEVEL_PATH, level_dir)
 
-    if "__init__.py" not in os.listdir(level_path) or not os.path.isdir(level_path):
+    if "__init__.py" not in os.listdir(level_path):
         continue
 
     level_absolute = level_path.replace("/", ".")
