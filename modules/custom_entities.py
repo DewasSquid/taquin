@@ -170,8 +170,7 @@ class Level(Entity):
                     model=model,
                     id=i,
                     level=self,
-                    position=Vec3(x, y, 1),
-                    color=color.random_color()
+                    position=Vec3(x, y, 1)
                 )
                 if brick.id == 0: self.black_brick = brick
                 
@@ -198,6 +197,8 @@ class Level(Entity):
         brick1_position, brick2_position = brick1.position, brick2.position
         brick1.animate_position(value=brick2_position, duration=.05, curve=curve.linear)
         brick2.animate_position(value=brick1_position, duration=.05, curve=curve.linear)
+        
+        self.is_solved()
     
     def is_solved(self) -> bool:
         """Vérifie si le tableau est résolu"""
