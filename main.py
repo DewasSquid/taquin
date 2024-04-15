@@ -37,8 +37,12 @@ for i, e in enumerate(main_menu.buttons):
 
 
 # Selecteur de niveau
-def start_game(level):
-    menu_parent.enabled = False 
+def start_game(level, level_path):
+    menu_parent.enabled = False
+    
+    skybox_path = os.path.join(level_path, "skybox")
+    Sky(texture=skybox_path)
+    
     level.main()
 
 
@@ -62,7 +66,7 @@ for i, level_dir in enumerate(os.listdir(LEVEL_PATH)):
             wordwrap=25
         ),
         y=(-i * button_spacing),
-        on_click=Func(start_game, level_module)
+        on_click=Func(start_game, level_module, level_path)
     )
 
 load_menu.back_button = MenuButton(
