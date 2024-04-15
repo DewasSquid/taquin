@@ -6,6 +6,7 @@ from modules import *
 
 app = Ursina()
 
+
 button_spacing = .075 * 1.25
 menu_parent = GameFrame()
 main_menu = Entity(parent=menu_parent)
@@ -86,7 +87,5 @@ for menu in (main_menu, load_menu):
 
 
     menu.on_enable = animate_in_menu
-
-BackgroundImage(parent=menu_parent, texture=Textures.MENU_BACKGROUND, scale=(window.aspect_ratio, 1), y=-.15)
 
 app.run()
