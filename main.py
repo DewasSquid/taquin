@@ -41,7 +41,7 @@ def start_game(level, level_path):
     menu_parent.enabled = False
     
     skybox_path = os.path.join(level_path, "skybox")
-    Sky(texture=skybox_path)
+    if skybox_path: Sky(texture=skybox_path)
     
     level.main()
 
