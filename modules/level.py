@@ -64,6 +64,9 @@ class Level(Entity):
 
     def setup_camera(self) -> None:
         """Définie la position de la caméra en fonction du nombre de briques"""
+        # Merci à cet article qui m'as permis de trouver cette formule !
+        # https://discourse.threejs.org/t/camera-zoom-to-fit-object/936
+        
         # Calculer le facteur d'échelle en fonction du nombre de briques
         scale_factor = max(1, self.model_amount / self.MIN_BRICKS)
 
