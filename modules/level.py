@@ -64,7 +64,6 @@ class Level(Entity):
 
     def setup_camera(self) -> None:
         """Définie la position de la caméra en fonction du nombre de briques"""
-        #TODO: Fix caméra distance
         # Calculer le facteur d'échelle en fonction du nombre de briques
         scale_factor = max(1, self.model_amount / self.MIN_BRICKS)
 
@@ -72,7 +71,7 @@ class Level(Entity):
         camera_distance = max(1, math.log(self.model_amount + 1, 2))
 
         # Définir une distance minimale de la caméra pour les niveaux avec peu de briques
-        min_camera_distance = 2
+        min_camera_distance = 10
 
         # Prendre en compte le facteur d'échelle pour les niveaux avec peu de briques
         camera_distance = max(camera_distance, min_camera_distance) * scale_factor
