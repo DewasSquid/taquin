@@ -8,7 +8,7 @@ MUSIC_VOLUME = 0.5
 SOUND_VOLUME = 1
 
 app = Ursina()
-Sky()
+sky = Sky()
 
 button_spacing = .075 * 1.25
 menu_parent = GameFrame()
@@ -44,10 +44,7 @@ def start_game(level, level_path):
         music_path = os.path.join(level_path, "audio/music.mp3")
 
         if skybox_path:
-            #TODO: Skybox, rétrécir la taille des images
-            Sky(
-                texture=skybox_path
-            )
+            sky.texture = skybox_path
         if music_path:
             Audio(
                 music_path,
