@@ -43,7 +43,7 @@ def start_game(level, level_path):
         music_path = os.path.join(level_path, "audio/music.mp3")
 
         if skybox_path:
-            #TODO: Skybox, rétrécir la taille des images en 
+            #TODO: Skybox, rétrécir la taille des images
             Sky(
                 texture=skybox_path
             )
