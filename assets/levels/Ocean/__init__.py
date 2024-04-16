@@ -1,6 +1,8 @@
 from modules import *
 from ursina import *
 
+models = ["cube" for _ in range(16)]
+level = Level(models=models)
 
 config = {
     "description": "Dans l'océan infini, les vagues chuchotent des histoires au sable.",
@@ -8,6 +10,4 @@ config = {
 }
 
 def main():
-    models = ["cube" for _ in range(16)]
-    level = Level(models=models)
     level.create()
