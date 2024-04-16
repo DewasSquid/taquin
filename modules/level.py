@@ -1,5 +1,6 @@
 from ursina import *
 import random
+import math
 
 
 class Brick(Button):
@@ -39,7 +40,7 @@ class Brick(Button):
     
     def on_enable(self) -> None:
         """L'ors de l'affichage de la brique"""
-        self.animate_scale(value=1, duration=.1*self.id, curve=curve.out_circ)
+        self.animate_scale(value=1, duration=(self.id/self.level.model_amount), curve=curve.out_circ)
 
 class Level(Entity):
     MIN_BRICKS = 9
@@ -60,12 +61,29 @@ class Level(Entity):
         self.black_brick = None
         
         self.setup_camera()
-        
+
     def setup_camera(self) -> None:
         """Définie la position de la caméra en fonction du nombre de briques"""
-        squared_pos = .15 * self.model_amount
-        camera.position = Vec3(squared_pos-.1, squared_pos, -(self.model_amount**1.5))
-    
+        #TODO: Fix caméra distance
+        # Calculer le facteur d'échelle en fonction du nombre de briques
+        scale_factor = max(1, self.model_amount / self.MIN_BRICKS)
+
+        # Utiliser une échelle logarithmique pour la distance de la caméra
+        camera_distance = max(1, math.log(self.model_amount + 1, 2))
+
+        # Définir une distance minimale de la caméra pour les niveaux avec peu de briques
+        min_camera_distance = 2
+
+        # Prendre en compte le facteur d'échelle pour les niveaux avec peu de briques
+        camera_distance = max(camera_distance, min_camera_distance) * scale_factor
+
+        # Centrer la caméra sur la grille
+        grid_size = max(3, int(self.model_amount ** 0.5))
+        center_x = (grid_size - 1) / 2
+        center_y = (grid_size - 1) / 2
+
+        camera.position = Vec3(center_x, center_y, -camera_distance)
+
     @property
     def bricks(self) -> list[Brick]:
         """Renvoie une liste de toutes les briques présentes dans le niveau"""
@@ -82,6 +100,7 @@ class Level(Entity):
             Func(self.generate_board),
             Wait(2),
             Func(self.shuffle_board),
+            Wait(.5),
             Func(setattr, mouse, "enabled", True),
         )
         board_seq.start()
@@ -134,6 +153,7 @@ class Level(Entity):
         self.is_solved()
     
     def is_solved(self) -> bool:
+        #TODO: vérifier que ça marche
         """Vérifie si le tableau est résolu"""
         i = 0
         for brick in self.bricks:

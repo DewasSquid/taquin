@@ -1,11 +1,13 @@
 from importlib import import_module
-
 from ursina import *
-
 from modules import *
 
-app = Ursina()
+#TODO: les autres niveaux et leurs fonctions
 
+MUSIC_VOLUME = 0.5
+SOUND_VOLUME = 1
+
+app = Ursina()
 
 button_spacing = .075 * 1.25
 menu_parent = GameFrame()
@@ -15,8 +17,7 @@ load_menu = Entity(parent=menu_parent)
 state_handler = Animator({
     "main_menu": main_menu,
     "load_menu": load_menu,
-}
-)
+})
 
 # Menu principal
 main_menu.title = Text(
@@ -35,14 +36,26 @@ for i, e in enumerate(main_menu.buttons):
     e.parent = main_menu
     e.y = (-i - 2) * button_spacing
 
-
 # Selecteur de niveau
 def start_game(level, level_path):
-    menu_parent.enabled = False
+    def load_level():
+        skybox_path = os.path.join(level_path, "skybox")
+        music_path = os.path.join(level_path, "audio/music.mp3")
+
+        if skybox_path:
+            #TODO: Skybox, rétrécir la taille des images en 
+            Sky(
+                texture=skybox_path
+            )
+        if music_path:
+            Audio(
+                music_path,
+                volume=MUSIC_VOLUME,
+                loop=True
+            )
     
-    skybox_path = os.path.join(level_path, "skybox")
-    if skybox_path: Sky(texture=skybox_path)
-    
+    menu_parent.disable()
+    load_level()
     level.main()
 
 
