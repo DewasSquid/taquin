@@ -8,6 +8,7 @@ MUSIC_VOLUME = 0.5
 SOUND_VOLUME = 1
 
 app = Ursina()
+Sky()
 
 button_spacing = .075 * 1.25
 menu_parent = GameFrame()
@@ -24,7 +25,7 @@ main_menu.title = Text(
     parent=main_menu,
     text="Jeu Du Taquin",
     scale=5,
-    color=color.rgb(255, 100, 200),
+    color=color.rgb(255, 30, 30),
     position=Vec2(-.4, .1)
 )
 
@@ -74,7 +75,7 @@ for i, level_dir in enumerate(os.listdir(LEVEL_PATH)):
         parent=load_menu,
         text=level_dir,
         tooltip=Tooltip(
-            text=f"<scale:1.5><yellow>{level_module.config['difficulty']} étoile(s)<scale:1><default>{level_module.config['description']}",
+            text=f"<scale:1.5><yellow>{level_module.config['difficulty']} étoile(s)<scale:1>\n<default>{level_module.config['description']}",
             background_color=color.black,
             wordwrap=25
         ),
