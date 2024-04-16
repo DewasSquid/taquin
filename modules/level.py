@@ -59,11 +59,9 @@ class Level(Entity):
         
         self.models = models
         self.black_brick = None
-        
-        self.setup_camera()
 
     def setup_camera(self) -> None:
-        """Définie la position de la caméra en fonction du nombre de briques"""
+        """Définit la position de la caméra en fonction du nombre de briques"""
         # Merci à cet article qui m'as permis de trouver cette formule !
         # https://discourse.threejs.org/t/camera-zoom-to-fit-object/936
         
@@ -89,6 +87,8 @@ class Level(Entity):
     
     def create(self) -> None:
         """Séquence pour créé un niveau complet, avec tableau et séquence d'attente"""
+        self.setup_camera()
+        
         board_seq = Sequence(
             Func(setattr, mouse, "enabled", False),
             Func(self.generate_board),
