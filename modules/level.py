@@ -67,19 +67,11 @@ class Level(Entity):
         # Merci à cet article qui m'as permis de trouver cette formule !
         # https://discourse.threejs.org/t/camera-zoom-to-fit-object/936
         
-        # Calculer le facteur d'échelle en fonction du nombre de briques
         scale_factor = max(1, self.model_amount / self.MIN_BRICKS)
-
-        # Utiliser une échelle logarithmique pour la distance de la caméra
         camera_distance = max(1, math.log(self.model_amount + 1, 2))
-
-        # Définir une distance minimale de la caméra pour les niveaux avec peu de briques
         min_camera_distance = 10
-
-        # Prendre en compte le facteur d'échelle pour les niveaux avec peu de briques
         camera_distance = max(camera_distance, min_camera_distance) * scale_factor
 
-        # Centrer la caméra sur la grille
         grid_size = max(3, int(self.model_amount ** 0.5))
         center_x = (grid_size - 1) / 2
         center_y = (grid_size - 1) / 2
