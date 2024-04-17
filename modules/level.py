@@ -1,6 +1,8 @@
-from ursina import *
-import random
+import itertools
 import math
+import random
+
+from ursina import *
 
 
 class Brick(Button):
@@ -35,8 +37,6 @@ class Brick(Button):
 
         if abs(x1 - x2) + abs(y1 - y2) == 1:
             self.level.swap_bricks(self, self.level.black_brick)
-        
-        if self.level.is_solved(): print("GG")
     
     def on_enable(self) -> None:
         """L'ors de l'affichage de la brique"""
@@ -56,6 +56,8 @@ class Level(Entity):
         self.model_amount = len(models)
         if self.model_amount < self.MIN_BRICKS:
             raise Exception(f"The level has {self.model_amount} models but needs to be at least {self.MIN_BRICKS}")
+        
+        self.dimension = math.ceil(math.sqrt(self.model_amount))
         
         self.models = models
         self.black_brick = None
@@ -101,14 +103,11 @@ class Level(Entity):
 
     def generate_board(self) -> None:
         """Génère un tableau de taquin en fonction du nombre de modèles"""
-        # Permet d'obtenir le nombre de briques par colonnes
-        dimension = math.ceil(math.sqrt(self.model_amount))
-        
-        row = []
         column = []
         i = 0
-        for x in range(dimension):
-            for y in range(dimension):
+        for x in range(self.dimension):
+            row = []
+            for y in range(self.dimension):
                 model = self.models[i]
                 
                 brick = Brick(
@@ -120,10 +119,10 @@ class Level(Entity):
                 )
                 if brick.id == 0: self.black_brick = brick
                 
-                column.append(brick)
                 i += 1
-            row.append(column)
-        self.board = row
+                row.append(brick)
+            column.append(row)
+        self.board = column
 
     def shuffle_board(self) -> None:
         """Mélange les briques du tableau"""
@@ -144,14 +143,15 @@ class Level(Entity):
         brick1.animate_position(value=brick2_position, duration=.05, curve=curve.linear)
         brick2.animate_position(value=brick1_position, duration=.05, curve=curve.linear)
         
-        self.is_solved()
+        print(self.is_solved())
     
     def is_solved(self) -> bool:
-        #TODO: vérifier que ça marche
         """Vérifie si le tableau est résolu"""
+        # FIXME: this function always returns true. Might be caused by the board variable being technically constant
         i = 0
-        for brick in self.bricks:
-            if brick.id != i:
-                return False
+        for x, y in itertools.product(range(self.dimension), repeat=2):
+            brick : Brick = self.board[x][y]
+            print(brick.id, i)
+            if brick.id != i: return False
             i += 1
         return True
