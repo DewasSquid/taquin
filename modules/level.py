@@ -23,6 +23,7 @@ class Brick(Button):
         
         self.id = id
         self.level = level
+        
         if self.id == 0:
             self.color = color.rgba(0, 0, 0, 0)
             self.highlight_color = self.color
@@ -37,10 +38,6 @@ class Brick(Button):
 
         if abs(x1 - x2) + abs(y1 - y2) == 1:
             self.level.swap_bricks(self, self.level.black_brick)
-    
-    def on_enable(self) -> None:
-        """L'ors de l'affichage de la brique"""
-        self.animate_scale(value=1, duration=(self.id/self.level.model_amount), curve=curve.out_circ)
 
 class Level(Entity):
     MIN_BRICKS = 9
@@ -118,6 +115,11 @@ class Level(Entity):
                     position=Vec3(x, y, 1)
                 )
                 if brick.id == 0: self.black_brick = brick
+                brick.animate_scale(
+                    value=1,
+                    duration=(brick.id/brick.level.model_amount),
+                    curve=curve.out_circ
+                )
                 
                 i += 1
                 row.append(brick)
