@@ -101,7 +101,7 @@ class Level(Entity):
                 for brick in self.parent.children:
                     if brick.position.x == row and brick.position.y == column:
                         board[row][column] = brick
-        return board
+        return board 
 
     @board.setter
     def board(self, new_board: List[List[Brick]]) -> None:
