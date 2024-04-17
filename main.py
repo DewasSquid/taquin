@@ -2,7 +2,7 @@ from importlib import import_module
 from ursina import *
 from modules import *
 
-#TODO: les autres niveaux et leurs fonctions
+# TODO: Pause menu using key function
 
 MUSIC_VOLUME = 0.5
 SOUND_VOLUME = 1
