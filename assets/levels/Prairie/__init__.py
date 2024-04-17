@@ -12,6 +12,3 @@ config = {
 
 def main():
     level.generate_board()
-
-def update():
-    print(level.is_solved())
