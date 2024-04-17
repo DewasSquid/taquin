@@ -1,5 +1,4 @@
 import os
-import subprocess
 import sys
 from importlib import import_module
 
@@ -35,7 +34,7 @@ class Game:
 
         self.main_menu.buttons = [
             MenuButton("Jouer", on_click=Func(setattr, self.state_handler, "state", "load_menu")),
-            MenuButton("Sortir", on_click=sys.exit),
+            MenuButton("Sortir", on_click=application.quit),
         ]
         for i, e in enumerate(self.main_menu.buttons):
             e.parent = self.main_menu
