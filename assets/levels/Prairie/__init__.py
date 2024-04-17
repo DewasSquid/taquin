@@ -11,4 +11,4 @@ config = {
 }
 
 def main():
-    level.generate_board()
+    level.create()
