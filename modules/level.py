@@ -171,8 +171,8 @@ class Level(Entity):
     def swap_bricks(self, brick1: Brick, brick2: Brick) -> None:
         """Échange les positions de deux briques"""
         brick1_position, brick2_position = brick1.position, brick2.position
-        brick1.animate_position(value=brick2_position, duration=.05, curve=curve.linear)
-        brick2.animate_position(value=brick1_position, duration=.05, curve=curve.linear)
+        brick1.animate_position(value=brick2_position, duration=.5, curve=curve.linear)
+        brick2.animate_position(value=brick1_position, duration=.5, curve=curve.linear)
 
         x1, y1 = int(brick1_position.x), int(brick1_position.y)
         x2, y2 = int(brick2_position.x), int(brick2_position.y)
@@ -184,8 +184,7 @@ class Level(Entity):
             content=[Button(
                 text="Retour",
                 on_click=Func(os.execv, sys.executable, ['python'] + sys.argv)
-            )],
-            enabled=False
+            )]
         )
     
     def is_solved(self) -> bool:
