@@ -1,9 +1,13 @@
-import itertools
 import math
+import os
 import random
 
 from ursina import *
 
+import config
+
+audio_path = "assets/sound/pieces"
+moved_piece_audios = [f"{audio_path}/{file}" for file in os.listdir(audio_path)]
 
 class Brick(Button):
     def __init__(self, model: Mesh, id: int, level, *args, **kwargs) -> None:
@@ -48,8 +52,9 @@ class Brick(Button):
         x1, y1, _ = self.position
         x2, y2, _ = self.level.black_brick.position
 
-        if abs(x1 - x2) + abs(y1 - y2) == 1:
-            self.level.swap_bricks(self, self.level.black_brick)
+        if abs(x1 - x2) + abs(y1 - y2) != 1: return
+        Audio(random.choice(moved_piece_audios), volume=config.SOUND_VOLUME, auto_destroy=True)
+        self.level.swap_bricks(self, self.level.black_brick)
 
 class Level(Entity):
     MIN_BRICKS = 9
