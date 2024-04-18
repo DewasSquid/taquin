@@ -1,6 +1,5 @@
 from ursina import Entity, Tooltip, camera, color, Button
 
-
 class GameFrame(Entity):
     def __init__(self, *args, **kwargs):
         """Entitée "root", il est recommendé de l'utiliser en tant que parent"""
