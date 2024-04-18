@@ -113,7 +113,7 @@ class Level(Entity):
         board_seq = Sequence(
             Func(setattr, mouse, "enabled", False),
             Func(self.generate_board),
-            Wait(2.5),
+            Wait(5),
             Func(self.shuffle_board),
             Wait(.5),
             Func(setattr, mouse, "enabled", True),
@@ -139,13 +139,13 @@ class Level(Entity):
                 if brick.id == 0: self.black_brick = brick
                 brick.animate_scale(
                     value=1,
-                    duration=(brick.id/brick.level.model_amount)*1.5,
+                    duration=(brick.id/brick.level.model_amount)*2.5,
                     curve=curve.out_circ
                 )
                 if brick.id != 0:
                     brick.id_text.animate_color(
                         value=color.black,
-                        duration=(brick.id/brick.level.model_amount)*1.5,
+                        duration=(brick.id/brick.level.model_amount)*3,
                         curve=curve.out_circ
                     )
                 
