@@ -4,10 +4,9 @@ from importlib import import_module
 
 from ursina import *
 
+import config
 from modules import *
 
-MUSIC_VOLUME = 0.5
-SOUND_VOLUME = 1
 
 class Game:
     def __init__(self):
@@ -89,7 +88,7 @@ class Game:
             if music_path:
                 Audio(
                     music_path,
-                    volume=MUSIC_VOLUME,
+                    volume=config.MUSIC_VOLUME,
                     loop=True
                 )
         
