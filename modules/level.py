@@ -53,7 +53,12 @@ class Brick(Button):
         x2, y2, _ = self.level.black_brick.position
 
         if abs(x1 - x2) + abs(y1 - y2) != 1: return
-        Audio(random.choice(moved_piece_audios), volume=config.SOUND_VOLUME, auto_destroy=True)
+        Audio(
+            random.choice(moved_piece_audios),
+            volume=config.SOUND_VOLUME,
+            pitch=random.uniform(0.8, 3),
+            auto_destroy=True
+        )
         self.level.swap_bricks(self, self.level.black_brick)
 
 class Level(Entity):
