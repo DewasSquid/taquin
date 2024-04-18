@@ -18,17 +18,28 @@ class Brick(Button):
             model=model,
             scale=0,
             color=color.white,
-            highlight_color=color.rgba(255, 0, 0, 100),
-            rotation=Vec3(-270, 0, -180),
             *args,
             **kwargs
         )
         
         self.id = id
-        if self.id == 0:
-            self.color = color.rgba(255, 255, 255, 50)
-        
         self.level = level
+        
+        if self.id == 0:
+            self.color = color.rgba(0, 0, 0, 0)
+            self.highlight_color = color.rgba(0, 0, 0, 0)
+            return
+        
+        self.highlight_color = color.rgba(255, 0, 0, 100)
+        
+        self.id_text = Text(
+            text=str(self.id),
+            color=color.rgba(0, 0, 0, 0),
+            scale=15,
+            parent=self,
+            origin=Vec3(-0.05, -0.05, 0),
+            position=Vec3(0, 0, -1)
+        )
 
     def on_click(self) -> None:
         """Échange la position de cette brique avec la brique noire lorsqu'elle est cliquée"""
@@ -92,7 +103,7 @@ class Level(Entity):
         board_seq = Sequence(
             Func(setattr, mouse, "enabled", False),
             Func(self.generate_board),
-            Wait(2),
+            Wait(2.5),
             Func(self.shuffle_board),
             Wait(.5),
             Func(setattr, mouse, "enabled", True),
@@ -118,9 +129,15 @@ class Level(Entity):
                 if brick.id == 0: self.black_brick = brick
                 brick.animate_scale(
                     value=1,
-                    duration=(brick.id/brick.level.model_amount),
+                    duration=(brick.id/brick.level.model_amount)*1.5,
                     curve=curve.out_circ
                 )
+                if brick.id != 0:
+                    brick.id_text.animate_color(
+                        value=color.black,
+                        duration=(brick.id/brick.level.model_amount)*1.5,
+                        curve=curve.out_circ
+                    )
                 
                 i += 1
                 row.append(brick)
@@ -152,6 +169,14 @@ class Level(Entity):
         self.board[x1][y1], self.board[x2][y2] = self.board[x2][y2], self.board[x1][y1]
 
         if not self.is_solved(): return
+        WindowPanel(
+            title="GAGNE !!",
+            content=[Button(
+                text="Retour",
+                on_click=Func(os.execv, sys.executable, ['python'] + sys.argv)
+            )],
+            enabled=False
+        )
     
     def is_solved(self) -> bool:
         """Vérifie si le tableau est résolu"""
