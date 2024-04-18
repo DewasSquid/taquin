@@ -17,17 +17,18 @@ class Brick(Button):
         super().__init__(
             model=model,
             scale=0,
+            color=color.white,
+            highlight_color=color.rgba(255, 0, 0, 100),
+            rotation=Vec3(-270, 0, -180),
             *args,
             **kwargs
         )
         
         self.id = id
-        self.level = level
-        
         if self.id == 0:
-            self.color = color.rgba(0, 0, 0, 0)
-            self.highlight_color = self.color
-            self.pressed_color = self.color
+            self.color = color.rgba(255, 255, 255, 50)
+        
+        self.level = level
 
     def on_click(self) -> None:
         """Échange la position de cette brique avec la brique noire lorsqu'elle est cliquée"""
@@ -130,9 +131,11 @@ class Level(Entity):
         """Mélange les briques du tableau"""
         # Collecte les positions originales des briques dans la grille
         original_positions = {(brick.position.x, brick.position.y): brick for brick in self.bricks}
+        
         # Génère un nouvel ordre aléatoire pour les positions des briques dans la grille
         random_positions = list(original_positions.keys())
         random.shuffle(random_positions)
+        
         # Réaffecte les briques aux positions aléatoires dans la grille
         for (x1, y1), (x2, y2) in zip(original_positions.keys(), random_positions):
             original_positions[(x1, y1)].animate_position(Vec3(x2, y2, 1), duration=.15)
@@ -148,7 +151,7 @@ class Level(Entity):
         x2, y2 = int(brick2_position.x), int(brick2_position.y)
         self.board[x1][y1], self.board[x2][y2] = self.board[x2][y2], self.board[x1][y1]
 
-        print(self.is_solved())
+        if not self.is_solved(): return
     
     def is_solved(self) -> bool:
         """Vérifie si le tableau est résolu"""
